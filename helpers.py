@@ -1,9 +1,10 @@
-from pyspark.sql import dataframe as DF
+from pyspark.sql import DataFrame as DF
 from pyspark import RDD
 
 def cleanup(df: DF) -> DF:
-    pass    
-    return clean_df
+    
+    cleandf = df.dropna()
+    return cleandf
 
 def normalize(df: DF) -> DF:
     pass

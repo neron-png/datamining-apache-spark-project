@@ -10,8 +10,8 @@ if __name__ == "__main__":
     
     df: DF = spark.read.csv("data-example2224.csv")
     
-    # TODO: implement
     clean_df = cleanup(df)
+    # TODO: implement
     normalized_df = normalize(df)
     
     print("Hello World!")
