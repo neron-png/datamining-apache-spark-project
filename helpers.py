@@ -1,10 +1,10 @@
-from pyspark.sql import dataframe as df
-from pyspark import rdd
+from pyspark.sql import dataframe as DF
+from pyspark import RDD
 
-def cleanup(rdd: rdd) -> rdd:
-    pass
-    return clean_rdd
+def cleanup(df: DF) -> DF:
+    pass    
+    return clean_df
 
-def normalize(rdd: rdd) -> rdd:
+def normalize(df: DF) -> DF:
     pass
-    return normalized_rdd
+    return normalized_df
