@@ -1,11 +1,22 @@
 from pyspark.sql import DataFrame as DF
 from pyspark import RDD
+from pyspark.sql.functions import max, min, udf, col
+from pyspark.sql.types import FloatType
+from pyspark.sql import functions as F
+from pyspark.ml.feature import MinMaxScaler
+from pyspark.ml.feature import VectorAssembler
 
 def cleanup(df: DF) -> DF:
-    
-    cleandf = df.dropna()
+    cleandf = df.dropna(how='any')
     return cleandf
 
 def normalize(df: DF) -> DF:
-    pass
-    return normalized_df
+    min0 = float(df.agg(F.min("_c0")).collect()[0][0])
+    max0 = float(df.agg(F.max("_c0")).collect()[0][0])
+    min1 = float(df.agg(F.min("_c1")).collect()[0][0])
+    max1 = float(df.agg(F.max("_c1")).collect()[0][0])
+
+    df_normalized = df.withColumn("_c0", (df["_c0"] - min0) / (max0 - min0))\
+        .withColumn("_c1", (df["_c1"] - min1) / (max1 - min1))
+    
+    return df_normalized
