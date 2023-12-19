@@ -1,10 +1,6 @@
 from pyspark.sql import DataFrame as DF
-from pyspark import RDD
-from pyspark.sql.functions import max, min, udf, col
-from pyspark.sql.types import FloatType
 from pyspark.sql import functions as F
-from pyspark.ml.feature import MinMaxScaler
-from pyspark.ml.feature import VectorAssembler
+
 
 def cleanup(df: DF) -> DF:
     cleandf = df.dropna(how='any')
