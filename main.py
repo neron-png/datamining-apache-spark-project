@@ -1,8 +1,8 @@
 from helpers import cleanup, normalize
 import pyspark.sql.dataframe as DF
 from pyspark import SparkContext as sc
-
 from pyspark.sql import SparkSession
+from kmeans import kmeansCluster
 
 if __name__ == "__main__":
     
@@ -13,3 +13,6 @@ if __name__ == "__main__":
     normalized_df = normalize(df)
     
     normalized_df.show()
+
+    clustered = kmeansCluster(normalized_df, n=10)
+    clustered.show()
