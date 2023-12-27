@@ -1,8 +1,8 @@
-from helpers import cleanup, normalize
+from helpers import cleanup, normalize, plot
 import pyspark.sql.dataframe as DF
 from pyspark import SparkContext as sc
 from pyspark.sql import SparkSession
-from kmeans import kmeansCluster
+from kmeans import kmeansCluster, reduceClusters
 
 if __name__ == "__main__":
     
@@ -14,5 +14,14 @@ if __name__ == "__main__":
     
     normalized_df.show()
 
-    clustered = kmeansCluster(normalized_df, n=10)
+    clustered = kmeansCluster(normalized_df, n=150)
     clustered.show()
+
+    # Remember to install pandas and matplotlib
+    # plot(clustered)
+    
+    # WIP: Reduce clusters to 5
+    reducedClusters = reduceClusters(clustered, n=5)
+    reducedClusters.show()
+    
+    # plot(reducedClusters)

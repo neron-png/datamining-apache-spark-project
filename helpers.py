@@ -16,3 +16,11 @@ def normalize(df: DF) -> DF:
         .withColumn("_c1", (df["_c1"] - min1) / (max1 - min1))
     
     return df_normalized
+
+def plot(df: DF):
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
+    pdf = df.toPandas()
+    pdf.plot.scatter(x='_c0', y='_c1', c="cluster", cmap="viridis")
+    plt.show()
