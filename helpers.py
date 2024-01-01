@@ -12,10 +12,28 @@ def normalize(df: DF) -> DF:
     min1 = float(df.agg(F.min("_c1")).collect()[0][0])
     max1 = float(df.agg(F.max("_c1")).collect()[0][0])
 
+    min_max_values = {"_c0":{},"_c1":{}}
+    min_max_values["_c0"]["min"] = min0
+    min_max_values["_c0"]["max"] = max0
+    min_max_values["_c1"]["min"] = min1
+    min_max_values["_c1"]["max"] = max1
+
     df_normalized = df.withColumn("_c0", (df["_c0"] - min0) / (max0 - min0))\
         .withColumn("_c1", (df["_c1"] - min1) / (max1 - min1))
     
-    return df_normalized
+    return df_normalized, min_max_values
+
+def denormalize(df: DF, min_max_values: dict) -> DF:
+    min0 = min_max_values["_c0"]["min"]
+    max0 = min_max_values["_c0"]["max"]
+    min1 = min_max_values["_c1"]["min"]
+    max1 = min_max_values["_c1"]["max"]
+
+    df_denormalized = df.withColumn("_c0", df["_c0"] * (max0 - min0) + min0)\
+        .withColumn("_c1", df["_c1"] * (max1 - min1) + min1)
+    
+    return df_denormalized
+
 
 def plot(df: DF, featureColumn: str):
     import matplotlib.pyplot as plt
