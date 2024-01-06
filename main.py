@@ -12,10 +12,12 @@ import sys
 
 
 def cleanup(df: DF) -> DF:
+    """Drop all rows which contain null values"""
     cleandf = df.dropna(how='any')
     return cleandf
 
 def normalize(df: DF) -> DF:
+    """min-max normalization"""
     min0 = float(df.agg(F.min("_c0")).collect()[0][0])
     max0 = float(df.agg(F.max("_c0")).collect()[0][0])
     min1 = float(df.agg(F.min("_c1")).collect()[0][0])
@@ -33,6 +35,7 @@ def normalize(df: DF) -> DF:
     return df_normalized, min_max_values
 
 def denormalize(df: DF, min_max_values: dict) -> DF:
+    """min-max denormalization"""
     min0 = min_max_values["_c0"]["min"]
     max0 = min_max_values["_c0"]["max"]
     min1 = min_max_values["_c1"]["min"]
@@ -61,6 +64,10 @@ def denormalize(df: DF, min_max_values: dict) -> DF:
 
 
 def kmeansCluster(df: DF, n: int):
+    """ K-means clustering with k=n
+    Compressing the input data into a vector and then clustering it, 
+    outputting the cluster number for each point under the new column cluster.
+    """
     vec_assembler = VectorAssembler(inputCols = ["_c0", "_c1"], 
                                     outputCol='features', handleInvalid="skip") 
     
@@ -74,39 +81,15 @@ def kmeansCluster(df: DF, n: int):
 
 
 def dist(a, b):
+    """ Euclidean distance between two points as (x,y) tuples/vectors with length 2 """
     return (a[0] - b[0])**2 + (a[1] - b[1])**2
 
 
-def reduceClusters(df: DF, n: int):
-    from pyspark.ml.clustering import BisectingKMeans
-    """in
-    +--------------------+-------------------+-------+                              
-    |                 _c0|                _c1|cluster|
-    +--------------------+-------------------+-------+
-    |  0.8095605242868158| 0.9369266055045872|    110|
-    | 0.09348496530454897|  0.944954128440367|     50|
-                ...             ...             ... 
-    """
-    # rdd = df.rdd.map(lambda x: (x[2], (x[0], x[1])))
-    # rdd = rdd.groupByKey().map(lambda x: (x[0], list(x[1])))
-    # rdd = rdd.reduceByKey(lambda x, y: x + y)
-    
-    # Group by cluster and vectorize it's points
-    centers = df.groupBy("cluster").avg("_c0", "_c1").withColumnRenamed("avg(_c0)", "_c0").withColumnRenamed("avg(_c1)", "_c1")
-    vec_assembler = VectorAssembler(inputCols = ["_c0", "_c1"], 
-                                    outputCol='features', handleInvalid="skip") 
-    transformed_centers = vec_assembler.transform(centers)
-    
-    bkm = BisectingKMeans(featuresCol="features", predictionCol="smallCluster", k=n, seed=42)
-    model = bkm.fit(transformed_centers)
-    predictions = model.transform(transformed_centers)
-    predictions.show()
-    
-    
-    return predictions.select("_c0", "_c1", "smallCluster").withColumnRenamed("smallCluster", "cluster")
-    
-
 def single_link(df: DF, n: int):
+    """_summary_
+    Single link clustering algorithm, applie on the centers of the previously acquired clusters.
+    Run locally, polynomial but n is small (150)"""
+    
     """in
     +--------------------+-------------------+-------+                              
     |                 _c0|                _c1|cluster|
