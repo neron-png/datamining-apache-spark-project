@@ -44,20 +44,20 @@ def denormalize(df: DF, min_max_values: dict) -> DF:
     return df_denormalized
 
 
-def plot(df: DF, featureColumn: str):
-    import matplotlib.pyplot as plt
-    import pandas as pd
+# def plot(df: DF, featureColumn: str):
+#     import matplotlib.pyplot as plt
+#     import pandas as pd
 
-    pdf = df.toPandas()
-    pdf.plot.scatter(x='_c0', y='_c1', c=featureColumn, cmap="viridis")
-    plt.show()
+#     pdf = df.toPandas()
+#     pdf.plot.scatter(x='_c0', y='_c1', c=featureColumn, cmap="viridis")
+#     plt.show()
 
-def testing_listPlot(df: list):
-    import matplotlib.pyplot as plt
-    import pandas as pd
+# def testing_listPlot(df: list):
+#     import matplotlib.pyplot as plt
+#     import pandas as pd
     
-    plt.scatter(x=[_[0] for _ in df], y=[_[1] for _ in df], c=[_[2] for _ in df], cmap="viridis")
-    plt.show()
+#     plt.scatter(x=[_[0] for _ in df], y=[_[1] for _ in df], c=[_[2] for _ in df], cmap="viridis")
+#     plt.show()
 
 
 def kmeansCluster(df: DF, n: int):
@@ -162,15 +162,15 @@ def single_link(df: DF, n: int):
     return df
 
 
-def plotDistribution(rdd: RDD):
-    import matplotlib.pyplot as plt
-    import pandas as pd
-    import numpy as np
+# def plotDistribution(rdd: RDD):
+#     import matplotlib.pyplot as plt
+#     import pandas as pd
+#     import numpy as np
     
-    points = rdd.collect()
-    distances = [point[1][2] for point in points]
-    plt.hist(distances, bins=100)
-    plt.show()
+#     points = rdd.collect()
+#     distances = [point[1][2] for point in points]
+#     plt.hist(distances, bins=100)
+#     plt.show()
     
 
 """_summary_

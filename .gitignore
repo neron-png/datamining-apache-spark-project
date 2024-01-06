@@ -6,6 +6,8 @@ venvwsl
 # C extensions
 *.so
 
+venv_
+data-example2223.csv
 # Distribution / packaging
 .Python
 build/
